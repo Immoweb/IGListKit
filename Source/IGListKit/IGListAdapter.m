@@ -1123,6 +1123,14 @@
 - (void)invalidateLayoutForSectionController:(IGListSectionController *)sectionController
                                   completion:(void (^)(BOOL finished))completion{
     const NSInteger section = [self sectionForSectionController:sectionController];
+    if (section == NSNotFound) {
+        // The section controller is not in the map, which can happen if the associated object was deleted or after a full reload.
+        if (completion) {
+            completion(NO);
+        }
+        return;
+    }
+
     const NSInteger items = [_collectionView numberOfItemsInSection:section];
 
     NSMutableArray<NSIndexPath *> *indexPaths = [NSMutableArray new];
